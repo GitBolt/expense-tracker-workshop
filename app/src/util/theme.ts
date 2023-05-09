@@ -9,13 +9,12 @@ export const theme = extendTheme({
                 const base = {
                     container: {
                         m: "0 2rem",
-                        padding: "1rem 1rem",
-                        width: "5rem",
+                        width: "3rem",
                         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.5)",
                     },
                     icon: {
-                        width: "2rem",
-                        height: "2rem"
+                        width: "1.5rem",
+                        height: "1.5rem"
                     },
                     closeButton: {
                         color: "white",
@@ -25,7 +24,7 @@ export const theme = extendTheme({
                     },
                     title: {
                         mt: "1px",
-                        fontSize: "1.8rem",
+                        fontSize: "1.5rem",
                         color: "#e3e3e3",
                         fontWeight: "500"
                     }

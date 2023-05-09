@@ -1,6 +1,6 @@
 import * as anchor from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js';
-import { DEVNET_RPC } from './constants';
+import { DEVNET_PROGRAM_ID, DEVNET_RPC } from './constants';
 import { IDLData, IDLType } from "@/util/idl";
 
 
@@ -28,7 +28,7 @@ export const anchorProgram = (wallet: anchor.Wallet, network?: string) => {
   const idl = IDLData as anchor.Idl;
   const program = new anchor.Program(
     idl,
-    new PublicKey(IDLData.metadata.address),
+    new PublicKey(DEVNET_PROGRAM_ID),
     provider
   ) as unknown as anchor.Program<IDLType>;
 

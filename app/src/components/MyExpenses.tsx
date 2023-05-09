@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -11,23 +11,32 @@ import {
   IconButton,
   Button,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
 import { AddItem } from "./AddItem";
+import { getExpenses } from "@/util/program/getExpenses";
+import { useAnchorWallet } from "@solana/wallet-adapter-react";
+import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
+import { truncatedPublicKey } from "@/util/helper";
+import { Expense } from "@/types/expense";
 
-const dummyData = [{ merchant: "Amazon", amount: 100, title: "Stuff", authority: "XYZ", pubKey: "XYZ", }, { merchant: "Walmart", amount: 500, title: "TV", authority: "XYZ", pubKey: "XYZ", },];
 
 export const MyExpenses = () => {
-  const [expenses, setExpenses] = useState(dummyData);
+  const [expenses, setExpenses] = useState<Expense[]>();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const wallet = useAnchorWallet()
 
-  const [newMerchant, setNewMerchant] = useState("");
-  const [newAmount, setNewAmount] = useState("");
-  const [newTitle, setNewTitle] = useState("");
+  useEffect(() => {
+    const run = async () => {
+      const data = await getExpenses(wallet as NodeWallet)
+      console.log(data)
+      setExpenses(data)
+    }
+    run()
+  }, [wallet])
 
-  const handleRemove = (index: number) => {
-    setExpenses((prevExpenses) => prevExpenses.filter((_, i) => i !== index));
-  };
+
 
   return (
     <Flex justifyContent="start" mt="10rem" w="100%" h="100vh" align="center" flexFlow="column" gap="1rem">
@@ -40,7 +49,6 @@ export const MyExpenses = () => {
           <Thead>
             <Tr>
               <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Merchant</Th>
-              <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Title</Th>
               <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Amount</Th>
               <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Public Key</Th>
               <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Actions</Th>
@@ -48,49 +56,12 @@ export const MyExpenses = () => {
           </Thead>
 
           <Tbody>
-            {expenses.map((expense, index) => (
+            {expenses && expenses.length ? expenses.map((expense: Expense, index) => (
               <Tr key={index} fontSize="1.4rem" color="gray.500" fontWeight={600}>
                 <Td>{expense.merchant}</Td>
-                <Td>{expense.title}</Td>
-                <Td>{expense.amount}</Td>
-                <Td>{expense.pubKey}</Td>
+                <Td>${expense.amount}</Td>
+                <Td>{truncatedPublicKey(expense.pubKey)}</Td>
                 <Td>
-                  {/* <IconButton
-                    icon={<EditIcon />}
-                    aria-label="Edit expense"
-                    mr={2}
-                    onClick={() =>
-                      handleEdit(
-                        index,
-                        "merchant",
-                        prompt("Edit merchant:", expense.merchant)
-                      )
-                    }
-                  />
-                  <IconButton
-                    icon={<EditIcon />}
-                    aria-label="Edit expense"
-                    mr={2}
-                    onClick={() =>
-                      handleEdit(
-                        index,
-                        "amount",
-                        prompt("Edit amount:", expense.amount)
-                      )
-                    }
-                  />
-                  <IconButton
-                    icon={<EditIcon />}
-                    aria-label="Edit expense"
-                    mr={2}
-                    onClick={() =>
-                      handleEdit(
-                        index,
-                        "title",
-                        prompt("Edit title:", expense.title)
-                      )
-                    }
-                  /> */}
                   <IconButton
                     h="3rem"
                     w="3rem"
@@ -101,7 +72,7 @@ export const MyExpenses = () => {
                   />
                 </Td>
               </Tr>
-            ))}
+            )) : <Text>Nothing to show here</Text>}
           </Tbody>
         </Table>
 
