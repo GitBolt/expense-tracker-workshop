@@ -1,3 +1,0 @@
-cargo:rerun-if-changed=build/main.rs
-cargo:rustc-env=TYPENUM_BUILD_CONSTS=/Users/chesterking/Desktop/boltOps/bounty/etracker/target/release/build/typenum-d836ce8ae56b147f/out/consts.rs
-cargo:rustc-env=TYPENUM_BUILD_OP=/Users/chesterking/Desktop/boltOps/bounty/etracker/target/release/build/typenum-d836ce8ae56b147f/out/op.rs
