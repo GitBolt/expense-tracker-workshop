@@ -12,6 +12,7 @@ import {
   Button,
   useDisclosure,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
 import { AddItem } from "./AddItem";
@@ -20,23 +21,36 @@ import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
 import { truncatedPublicKey } from "@/util/helper";
 import { Expense } from "@/types/expense";
+import { deleteExpense } from "@/util/program/deleteExpense";
 
 
 export const MyExpenses = () => {
   const [expenses, setExpenses] = useState<Expense[]>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const wallet = useAnchorWallet()
-
+  const toast = useToast()
   useEffect(() => {
     const run = async () => {
       const data = await getExpenses(wallet as NodeWallet)
-      console.log(data)
       setExpenses(data)
     }
     run()
   }, [wallet])
 
 
+  const handleRemove = async (id: number) => {
+    if (!wallet) {
+      toast({
+        status: "error",
+        title: "Connect Wallet Required"
+      })
+      return
+    }
+    const sig = await deleteExpense(wallet as NodeWallet, id)
+    console.log(sig)
+    const data = await getExpenses(wallet as NodeWallet)
+    setExpenses(data)
+  }
 
   return (
     <Flex justifyContent="start" mt="10rem" w="100%" h="100vh" align="center" flexFlow="column" gap="1rem">
@@ -68,7 +82,7 @@ export const MyExpenses = () => {
                     bg="red.100"
                     icon={<DeleteIcon style={{ width: "2rem", height: "2rem" }} color="red" />}
                     aria-label="Remove expense"
-                    onClick={() => handleRemove(index)}
+                    onClick={async () => await handleRemove(expense.id)}
                   />
                 </Td>
               </Tr>
@@ -76,7 +90,7 @@ export const MyExpenses = () => {
           </Tbody>
         </Table>
 
-        <AddItem onClose={onClose} isOpen={isOpen} />
+        <AddItem onClose={onClose} isOpen={isOpen} setExpenses={setExpenses} />
       </Box>
     </Flex>
   )

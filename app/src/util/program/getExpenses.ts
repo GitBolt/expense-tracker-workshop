@@ -10,10 +10,12 @@ export const getExpenses = async (
 
   // @ts-ignore
   const expenses = await program.account.expenseAccount.all()
+  console.log(expenses)
   const output = expenses.map((expense: any) => {
     return {
       merchant: expense.account.mname,
       amount: expense.account.amount.toNumber(),
+      id: expense.account.id.toNumber(),
       pubKey: expense.publicKey.toBase58(),
     };
   });

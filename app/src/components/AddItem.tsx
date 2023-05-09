@@ -1,5 +1,6 @@
 import { DEVNET_RPC } from "@/util/constants"
 import { createExpense } from "@/util/program/createExpense"
+import { getExpenses } from "@/util/program/getExpenses"
 import {
   Button,
   FormControl,
@@ -22,7 +23,7 @@ import { useAnchorWallet } from "@solana/wallet-adapter-react"
 import { Connection, Transaction } from "@solana/web3.js"
 import React, { useState } from "react"
 
-export const AddItem = ({ isOpen, onClose }: { isOpen: boolean, onClose: any }) => {
+export const AddItem = ({ isOpen, onClose, setExpenses }: { isOpen: boolean, onClose: any, setExpenses:any }) => {
 
   const [merchant, setMerchant] = useState<string>('')
   const [amount, setAmount] = useState<number>(0)
@@ -54,7 +55,8 @@ export const AddItem = ({ isOpen, onClose }: { isOpen: boolean, onClose: any }) 
     }
 
     console.log(sig)
-
+    const data = await getExpenses(wallet as NodeWallet)
+    setExpenses(data)
     toast({
       status: "success",
       title: "Signature: " + sig
