@@ -1,0 +1,1 @@
+/Users/chesterking/Desktop/boltOps/solana-expense-tracker/anchor-program/target/bpfel-unknown-unknown/release/etracker.so: /Users/chesterking/Desktop/boltOps/solana-expense-tracker/anchor-program/programs/etracker/src/lib.rs
