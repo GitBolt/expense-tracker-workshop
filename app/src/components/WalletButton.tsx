@@ -51,23 +51,22 @@ const ConnectWalletButton = () => {
       <MenuButton
         as={Button}
         colorScheme='messenger'
-        w="17rem"
+        w="13rem"
         borderRadius="0.5rem"
-        h="3.6rem"
         rightIcon={
           connected && wallet ? (
-            <Box h="2.5rem" w="2.5rem" mr="1rem">
+            <Box h="1.5rem" w="1.5rem" mr="1rem">
               <img
                 src={wallet.adapter.icon}
                 alt={`${wallet.adapter.name} Icon`}
               />
             </Box>
-          ) : <ChevronDownIcon color="white" w="2.5rem" h="2.5rem" />
+          ) : <ChevronDownIcon color="white" w="1.5rem" h="1.5rem" />
         }
       >
-        {!connected && <Text fontSize="1.55rem">Connect Wallet</Text>}
+        {!connected && <Text fontSize="1.2rem">Connect Wallet</Text>}
         {connected && wallet !== null && (
-          <Text fontSize="1.55rem">
+          <Text fontSize="1.2rem">
             {truncatedPublicKey(publicKey!.toString(), 4)}
           </Text>
         )}
@@ -75,17 +74,17 @@ const ConnectWalletButton = () => {
 
       {connected && (
         <MenuList
-          w="17rem"
+          w="10rem"
           p="0.5rem"
           borderRadius="1rem"
         >
           <MenuItem
-            h="4rem"
+            h="3rem"
             onClick={copyPublicKey}>
-            <Text fontSize="1.5rem" color="blue.400" fontWeight={500}>Copy Address</Text>
+            <Text fontSize="1.2rem" color="blue.400" fontWeight={500}>Copy Address</Text>
           </MenuItem>
           <MenuItem
-            h="4rem"
+            h="3rem"
             onClick={async () => {
               if (wallet == null) {
                 return;
@@ -93,7 +92,7 @@ const ConnectWalletButton = () => {
               await wallet.adapter.disconnect();
             }}
           >
-            <Text fontSize="1.5rem" color="blue.400" fontWeight={500}>
+            <Text fontSize="1.2rem" color="blue.400" fontWeight={500}>
               Disconnect
             </Text>
           </MenuItem>
@@ -103,7 +102,7 @@ const ConnectWalletButton = () => {
 
       {!connected && wallets && (
         <MenuList
-          w="17rem"
+          w="10rem"
           p="0.5rem"
           borderRadius="1rem"
         >
@@ -111,7 +110,7 @@ const ConnectWalletButton = () => {
             return (
               <MenuItem
                 key={wallet.adapter.name}
-                h="5rem"
+                h="3rem"
                 onClick={async () => {
                   try {
                     onConnectWallet(wallet)
@@ -120,8 +119,8 @@ const ConnectWalletButton = () => {
                   }
                 }}
               >
-                <Flex gap="1rem">
-                  <Box w="2.5rem" h="2.5rem">
+                <Flex gap="1rem" align="center">
+                  <Box w="2rem" h="2rem">
                     <img
                       width={100}
                       loading="lazy"
@@ -132,7 +131,7 @@ const ConnectWalletButton = () => {
                     />
                   </Box>
                   <Text
-                    fontSize="1.4rem"
+                    fontSize="1.2rem"
                     ml={2}
                     fontWeight={600}
                     color="gray.500"

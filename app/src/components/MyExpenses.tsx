@@ -11,17 +11,9 @@ import {
   IconButton,
   Button,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  FormControl,
-  FormLabel,
-  Input,
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
+import { AddItem } from "./AddItem";
 
 const dummyData = [{ merchant: "Amazon", amount: 100, title: "Stuff", authority: "XYZ", pubKey: "XYZ", }, { merchant: "Walmart", amount: 500, title: "TV", authority: "XYZ", pubKey: "XYZ", },];
 
@@ -37,25 +29,9 @@ export const MyExpenses = () => {
     setExpenses((prevExpenses) => prevExpenses.filter((_, i) => i !== index));
   };
 
-  const handleEdit = (index: any, key: any, value: any) => {
-    setExpenses((prevExpenses) =>
-      prevExpenses.map((expense, i) =>
-        i === index ? { ...expense, [key]: value } : expense
-      )
-    );
-  };
-
-  const handleAdd = () => {
-    setExpenses((prevExpenses) => [...prevExpenses, { merchant: newMerchant, amount: newAmount, title: newTitle, authority: "XYZ", pubKey: "XYZ", },]);
-    setNewMerchant("");
-    setNewAmount("");
-    setNewTitle("");
-    onClose();
-  };
-
   return (
-    <Flex justifyContent="center" w="100%" h="100vh" align="center" flexFlow="column" gap="1rem">
-      <Button leftIcon={<AddIcon />} onClick={onOpen} mt={4} colorScheme="blue" fontSize="2rem" h="4rem">
+    <Flex justifyContent="start" mt="10rem" w="100%" h="100vh" align="center" flexFlow="column" gap="1rem">
+      <Button leftIcon={<AddIcon />} onClick={onOpen} mt={4} colorScheme="blue" fontSize="1.3rem" h="3rem">
         Add new expense
       </Button>
       <Box p="2rem 1rem" boxShadow="0px 5px 20px #f1f1f5" border="1px solid" borderColor="gray.100" borderRadius="1rem" w="50%" fontSize="2rem">
@@ -63,17 +39,17 @@ export const MyExpenses = () => {
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th fontSize="2rem">Merchant</Th>
-              <Th fontSize="2rem">Title</Th>
-              <Th fontSize="2rem">Amount</Th>
-              <Th fontSize="2rem">Public Key</Th>
-              <Th fontSize="2rem">Actions</Th>
+              <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Merchant</Th>
+              <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Title</Th>
+              <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Amount</Th>
+              <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Public Key</Th>
+              <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Actions</Th>
             </Tr>
           </Thead>
 
           <Tbody>
             {expenses.map((expense, index) => (
-              <Tr key={index} fontSize="1.8rem" color="blue.500" fontWeight={600}>
+              <Tr key={index} fontSize="1.4rem" color="gray.500" fontWeight={600}>
                 <Td>{expense.merchant}</Td>
                 <Td>{expense.title}</Td>
                 <Td>{expense.amount}</Td>
@@ -129,37 +105,7 @@ export const MyExpenses = () => {
           </Tbody>
         </Table>
 
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Add new expense</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <FormControl mb={4}>
-                <FormLabel>Merchant</FormLabel>
-                <Input
-                  value={newMerchant}
-                  onChange={(e) => setNewMerchant(e.target.value)}
-                />
-              </FormControl>
-              <FormControl mb={4}>
-                <FormLabel>Title</FormLabel>
-                <Input
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                />
-              </FormControl>
-              <FormControl mb={4}>
-                <FormLabel>Amount</FormLabel>
-                <Input
-                  value={newAmount}
-                  onChange={(e) => setNewAmount(e.target.value)}
-                />
-              </FormControl>
-              <Button onClick={handleAdd}>Add expense</Button>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
+        <AddItem onClose={onClose} isOpen={isOpen} />
       </Box>
     </Flex>
   )
