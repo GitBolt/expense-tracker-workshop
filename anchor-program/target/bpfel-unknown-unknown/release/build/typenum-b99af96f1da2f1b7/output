@@ -1,0 +1,3 @@
+cargo:rerun-if-changed=build/main.rs
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/Users/chesterking/Desktop/boltOps/bounty/etracker/target/bpfel-unknown-unknown/release/build/typenum-b99af96f1da2f1b7/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/Users/chesterking/Desktop/boltOps/bounty/etracker/target/bpfel-unknown-unknown/release/build/typenum-b99af96f1da2f1b7/out/op.rs
