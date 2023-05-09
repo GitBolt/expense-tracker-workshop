@@ -57,4 +57,19 @@ describe("etracker", async() => {
     await console.log(dt)
 
   });
+
+  it("Delete Expense", async () => {
+
+    const tx = await program.methods.deleteExpense(
+      "1"
+    ).accounts({
+      expenseAccount: expense_account,
+      authority: wallet.publicKey,
+    })
+    .rpc();
+
+
+  });
+
+
 });
