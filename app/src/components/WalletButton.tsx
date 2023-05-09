@@ -42,7 +42,7 @@ const ConnectWalletButton = () => {
       await connect();
     } catch (e) {
       console.log("Wallet Error: ", e);
-      toast({ status: "info", title: 'A non-critical error occured. Try connecting again.' })
+      // toast({ status: "info", title: 'A non-critical error occured. Try connecting again.' })
     }
   };
 
@@ -78,13 +78,11 @@ const ConnectWalletButton = () => {
           w="17rem"
           p="0.5rem"
           borderRadius="1rem"
-          borderColor="blue.100"
-          border="1px solid"
         >
           <MenuItem
             h="4rem"
             onClick={copyPublicKey}>
-            <Text color="blue.200" fontSize="1.5rem">Copy Address</Text>
+            <Text fontSize="1.5rem" color="blue.400" fontWeight={500}>Copy Address</Text>
           </MenuItem>
           <MenuItem
             h="4rem"
@@ -95,7 +93,7 @@ const ConnectWalletButton = () => {
               await wallet.adapter.disconnect();
             }}
           >
-            <Text fontSize="1.5rem" color="blue.200">
+            <Text fontSize="1.5rem" color="blue.400" fontWeight={500}>
               Disconnect
             </Text>
           </MenuItem>
@@ -114,8 +112,6 @@ const ConnectWalletButton = () => {
               <MenuItem
                 key={wallet.adapter.name}
                 h="5rem"
-                bg="gray.100"
-                marginTop="0.8rem"
                 onClick={async () => {
                   try {
                     onConnectWallet(wallet)
