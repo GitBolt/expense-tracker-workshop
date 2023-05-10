@@ -82,7 +82,7 @@ export const UpdateItem = ({ isOpen, onClose, setExpenses, currentValues }: { is
           <FormControl mb={4}>
             <FormLabel>Merchant</FormLabel>
             <Input
-              value={merchant}
+              defaultValue={currentValues.merchant}
               onChange={(e) => setMerchant(e.target.value)}
             />
           </FormControl>
@@ -90,7 +90,7 @@ export const UpdateItem = ({ isOpen, onClose, setExpenses, currentValues }: { is
             <FormLabel>Amount</FormLabel>
 
             <NumberInput
-              value={amount}
+              defaultValue={currentValues.amount}
 
               onChange={(e) => setAmount(Number(e))}
             >
