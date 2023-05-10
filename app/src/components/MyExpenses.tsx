@@ -14,7 +14,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { EditIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon, AddIcon, LinkIcon } from "@chakra-ui/icons";
 import { AddItem } from "./AddItem";
 import { getExpenses } from "@/util/program/getExpenses";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
@@ -24,6 +24,7 @@ import { Expense } from "@/types/expense";
 import { deleteExpense } from "@/util/program/deleteExpense";
 import { UpdateItem } from "./UpdateItem";
 import { DistributionChart } from "./DistributionChart";
+import { GITHUB_LINK } from "@/util/constants";
 
 
 export const MyExpenses = () => {
@@ -63,6 +64,13 @@ export const MyExpenses = () => {
     }
     const sig = await deleteExpense(wallet as NodeWallet, id)
     console.log(sig)
+
+    if (sig) {
+      toast({
+        status: "success",
+        title: "Removed expense entry"
+      })
+    }
     const data = await getExpenses(wallet as NodeWallet)
     setExpenses(data)
   }
@@ -81,41 +89,49 @@ export const MyExpenses = () => {
   return (
     <Flex w="100%" h="100vh" align="start" mt="10rem" justifyContent="space-around">
       <Flex flexFlow="column" gap="2rem">
-        <Button w="30%" leftIcon={<AddIcon />} onClick={onOpen} mt={4} colorScheme="blue" fontSize="1.3rem" h="3rem">
-          Add new expense
-        </Button>
+
+        <Flex justify="space-between">
+
+          <Button onClick={() => window.open(GITHUB_LINK)} w="8rem" leftIcon={<LinkIcon sx={{ mb: "4px" }} />} mt={4} colorScheme="messenger" fontSize="1.4rem" p="4px 0 0 0">
+            GitHub
+          </Button>
+          <Button onClick={onOpen} w="6rem" leftIcon={<AddIcon sx={{ mb: "4px" }} />} mt={4} colorScheme="whatsapp" fontSize="1.4rem" p="4px 0 0 0">
+            Add
+          </Button>
+
+        </Flex>
         <Box w="100%" p="2rem 1rem" boxShadow="0px 5px 20px #f1f1f5" border="1px solid" borderColor="gray.100" borderRadius="1rem" fontSize="2rem">
 
           <Table variant="simple">
             <Thead>
               <Tr>
-                <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Merchant</Th>
-                <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Amount</Th>
-                <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Public Key</Th>
-                <Th fontSize="1.4rem" color="gray.400" fontWeight={400}>Actions</Th>
+                <Th sx={{ textTransform: "none" }} fontSize="1.4rem" color="gray.400" fontWeight={400}>Merchant</Th>
+                <Th sx={{ textTransform: "none" }} fontSize="1.4rem" color="gray.400" fontWeight={400}>Amount</Th>
+                <Th sx={{ textTransform: "none" }} fontSize="1.4rem" color="gray.400" fontWeight={400}>Public Key</Th>
+                <Th sx={{ textTransform: "none" }} fontSize="1.4rem" color="gray.400" fontWeight={400}>Actions</Th>
               </Tr>
             </Thead>
 
             <Tbody>
               {expenses && expenses.length ? expenses.map((expense: Expense, index) => (
-                <Tr key={index} fontSize="1.4rem" color="gray.500" fontWeight={600}>
+                <Tr key={index} fontSize="1.4rem" color="gray.500" fontWeight={500}>
                   <Td>{expense.merchant}</Td>
                   <Td>${expense.amount}</Td>
                   <Td>{truncatedPublicKey(expense.pubKey)}</Td>
                   <Td>
                     <IconButton
-                      h="3rem"
-                      w="3rem"
+                      h="2rem"
+                      w="2rem"
                       mr="10px"
-                      icon={<EditIcon style={{ width: "2rem", height: "2rem" }} />}
-                      aria-label="Update expense"
+                      icon={<EditIcon style={{ width: "1.5rem", height: "1.5rem" }} />}
+                      aria-label="Update Expense"
                       onClick={() => handleUpdate(expense)}
                     />
                     <IconButton
-                      h="3rem"
-                      w="3rem"
+                      h="2rem"
+                      w="2rem"
                       bg="red.100"
-                      icon={<DeleteIcon style={{ width: "2rem", height: "2rem" }} color="red" />}
+                      icon={<DeleteIcon style={{ width: "1.5rem", height: "1.5rem" }} color="red" />}
                       aria-label="Remove expense"
                       onClick={async () => await handleRemove(expense.id)}
                     />

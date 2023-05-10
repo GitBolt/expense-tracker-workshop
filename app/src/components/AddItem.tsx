@@ -20,10 +20,9 @@ import {
 } from "@chakra-ui/react"
 import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet"
 import { useAnchorWallet } from "@solana/wallet-adapter-react"
-import { Connection, Transaction } from "@solana/web3.js"
 import React, { useState } from "react"
 
-export const AddItem = ({ isOpen, onClose, setExpenses }: { isOpen: boolean, onClose: any, setExpenses:any }) => {
+export const AddItem = ({ isOpen, onClose, setExpenses }: { isOpen: boolean, onClose: any, setExpenses: any }) => {
 
   const [merchant, setMerchant] = useState<string>('')
   const [amount, setAmount] = useState<number>(0)
@@ -54,13 +53,16 @@ export const AddItem = ({ isOpen, onClose, setExpenses }: { isOpen: boolean, onC
       return
     }
 
-    console.log(sig)
-    const data = await getExpenses(wallet as NodeWallet)
-    setExpenses(data)
+    console.log("Add sig: ", sig)
+
     toast({
       status: "success",
       title: "Signature: " + sig
     })
+
+    const data = await getExpenses(wallet as NodeWallet)
+    setExpenses(data)
+
 
   }
   return (
@@ -94,7 +96,7 @@ export const AddItem = ({ isOpen, onClose, setExpenses }: { isOpen: boolean, onC
 
 
           </FormControl>
-          <Button onClick={onSubmit} colorScheme="messenger">Add expense</Button>
+          <Button onClick={onSubmit} colorScheme="messenger">Add Expense</Button>
         </ModalBody>
       </ModalContent>
     </Modal>
