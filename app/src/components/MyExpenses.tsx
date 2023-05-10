@@ -22,11 +22,20 @@ import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
 import { truncatedPublicKey } from "@/util/helper";
 import { Expense } from "@/types/expense";
 import { deleteExpense } from "@/util/program/deleteExpense";
+import { UpdateItem } from "./UpdateItem";
 
 
 export const MyExpenses = () => {
   const [expenses, setExpenses] = useState<Expense[]>();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [currentValues, setCurrentValues] = useState<any>({})
+  const {
+    isOpen: isOpen2,
+    onOpen: onOpen2,
+    onClose: onClose2
+  } = useDisclosure()
+
+
   const wallet = useAnchorWallet()
   const toast = useToast()
   useEffect(() => {
@@ -50,6 +59,17 @@ export const MyExpenses = () => {
     console.log(sig)
     const data = await getExpenses(wallet as NodeWallet)
     setExpenses(data)
+  }
+
+  const handleUpdate = async (expense: Expense) => {
+    setCurrentValues({
+      id: expense.id,
+      pubKey: expense.pubKey,
+      amount: expense.amount,
+      merchant: expense.merchant
+    })
+
+    onOpen2()
   }
 
   return (
@@ -79,6 +99,14 @@ export const MyExpenses = () => {
                   <IconButton
                     h="3rem"
                     w="3rem"
+                    mr="10px"
+                    icon={<EditIcon style={{ width: "2rem", height: "2rem" }}  />}
+                    aria-label="Update expense"
+                    onClick={() => handleUpdate(expense)}
+                  />
+                  <IconButton
+                    h="3rem"
+                    w="3rem"
                     bg="red.100"
                     icon={<DeleteIcon style={{ width: "2rem", height: "2rem" }} color="red" />}
                     aria-label="Remove expense"
@@ -91,6 +119,7 @@ export const MyExpenses = () => {
         </Table>
 
         <AddItem onClose={onClose} isOpen={isOpen} setExpenses={setExpenses} />
+        {currentValues && <UpdateItem onClose={onClose2} isOpen={isOpen2} setExpenses={setExpenses} currentValues={currentValues} />}
       </Box>
     </Flex>
   )
