@@ -30,7 +30,7 @@ In our case, we are using PDAs as separate accounts that are owned by the user. 
 
 > Note: PDAs are **derived** using an algorithm, we can get them using PublicKey.findProgramAddressSync from `@solana/web3.js`. PDAs are NOT fetched from on-chain data, only accounts are **fetched**.
 
-### Client
+### Client Code
 Let's go through the code and understand how our client is working.
 1. Program Interaction
 - 1.1 Creating Anchor Provider
@@ -44,9 +44,9 @@ Let's go through the code and understand how our client is working.
 - 2.2 Creating Chart
 
 
-#### 1.1
+#### 1.1 Creating Anchor Provider
 Let's get started with creating a Anchor provider, which will interact with our Solana program.
-Head over to: [/app/util/anchorProgram.ts](/app/util/anchorProgram.ts)
+Head over to: [/app/src/util/anchorProgram.ts](/app/src/util/anchorProgram.ts)
 
 
 We're first creating the anchor program provider that will help us interact with our program. Note that it takes in our `IDL`, let's understand that next.
@@ -64,12 +64,12 @@ export const anchorProgram = (wallet: anchor.Wallet, network?: string) => {
 };
 ```
 
-#### 1.2
+#### 1.2 Adding IDL
 When you build your program, in the `target/` directory, your program's IDL is created. IDL is essentially the strucuture of your entire program, including all instructions, instruction params and all accounts. 
-The IDL is saved in a JSON file. We have to copy it in our client code and save it as a type so that we can easily work with our anchor provider with type annotations and checking. In this repository, the IDL is present in [/app/util/idl.ts](/app/util/idl.ts) file
+The IDL is saved in a JSON file. We have to copy it in our client code and save it as a type so that we can easily work with our anchor provider with type annotations and checking. In this repository, the IDL is present in [/app/src/util/idl.ts](/app/src/util/idl.ts) file
 
-#### 1.3
-We learnt in the [PDAs](#PDAs) section above about PDAs. Let's see how we derive it in the client. Open up any file from the [/app/util/program](/app/util/program) directory.
+#### 1.3 Deriving PDAs in client
+We learnt in the [PDAs](#PDAs) section above about PDAs. Let's see how we derive it in the client. Open up any file from the [/app/src/util/program](/app/src/util/program) directory.
 For example, to derive an expense's account PDA, we're using
 ```ts
 let [expense_account, bump] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -85,8 +85,8 @@ The `findProgramAddressSync` function takes in a seeds array and program ID.
 In our program, the seeds are: "expense" string, wallet public key and id of our expense entry. You can see how it works in [Diagrams](#Diagrams) section
 This function returns out PDA and bump that kicked the public key off the ED2559 curve. Let's see how we can use this PDA and interact with our program in client
 
-#### 1.4
-Let's open [/app/util/program/createExpense.ts](/app/util/program/createExpense.ts) to understand how we're calling the `initializeExpense` instruction to add a new expense entry through client.
+#### 1.4 Understanding Instruction Calling
+Let's open [/app/src/util/program/createExpense.ts](/app/src/util/program/createExpense.ts) to understand how we're calling the `initializeExpense` instruction to add a new expense entry through client.
 The function is deriving a PDA first, which we've covered, let's look at the important part, which is:
 ```ts
     const sig = await program.methods.initializeExpense(
@@ -105,7 +105,7 @@ Next, we need to enter all the accounts that are required for this method. We're
 
 Similarly, we're calling all other instructions in client for updating and deleting expense.
 
-#### 1.5
+#### 1.5 Fetching on-chain data
 We've understand how to call instructions in our Solana program through client. But, how do we fetch the on-chain data?
 Let's open up [app/util/program/getExpenses.ts](app/util/program/getExpenses.ts).
 We're fetching all expense accounts in this part:
@@ -114,9 +114,9 @@ const expenses = await program.account.expenseAccount.all()
 ```
 We're getting out expenseAccount and using the `all()` method to get all expense accounts. We can also fetch indiviual accounts by using the `fetch()` method and passing our PDA instead.
 
-##### 2.1
+#### 2.1 Creating expense data table
 Now, let's see where and how we are rendering out data.
-Open up [/app/components/MyExpenses.tsx](/app/components/MyExpenses.tsx)
+Open up [/app/src/components/MyExpenses.tsx](/app/src/components/MyExpenses.tsx)
 Notice this part:
 ```ts
   useEffect(() => {
@@ -131,11 +131,11 @@ Notice this part:
     run()
   }, [wallet])
 ```
-Here, we're calling the `getExpenses` function which we have defined in [/app/utils/program/getExpenses.ts](/app/utils/program/getExpenses.ts).
+Here, we're calling the `getExpenses` function which we have defined in [/app/src/utils/program/getExpenses.ts](/app/src/utils/program/getExpenses.ts).
 When we get the data, we're storing it in our expenses state, which is being rendered at the bottom as a table from Chakra UI components
 
-##### 2.2
-Finally, the chart which you see on the right side is defined in [/app/components/DistributionChart.tsx](/app/components/DistributionChart.tsx).
+#### 2.2 Creating Chart
+Finally, the chart which you see on the right side is defined in [/app/src/components/DistributionChart.tsx](/app/src/components/DistributionChart.tsx).
 Using the `chart.js` library, we're passing the same data we get from `getExpenses`, filtering it a bit to be entered in Chart.js' data format and returning a simple Doughnut chart.
 
 
@@ -145,7 +145,7 @@ Using the `chart.js` library, we're passing the same data we get from `getExpens
     - Click on the [Solana Playground](https://beta.solpg.io/645acbc1d6ebe745da20439e) link and deploy it 
     - Install [Anchor](https://www.anchor-lang.com/), Rust and Solana CLI. Then head over to `/anchor-program` directory and follow instructions from Anchor docs to deploy the program to devnet.
 
-2. To launch the frontend, head over to `/app` directory and enter: `yarn install && yarn dev`
+2. To launch the frontend, head over to `/app/src` directory and enter: `yarn install && yarn dev`
 
 ### Diagrams
 ![](./assets/create_expense.png)
