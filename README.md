@@ -49,6 +49,8 @@ To get started, we create an Anchor provider, which will interact with our Solan
 
 We first create an anchor program provider that will help us interact with our program. Note that it takes in our `IDL`. We will understand more about the IDL next. 
 ```ts
+// Line 26
+
 export const anchorProgram = (wallet: anchor.Wallet, network?: string) => {
   const provider = getProvider(wallet, network);
   const idl = IDLData as anchor.Idl;
@@ -70,6 +72,8 @@ The IDL is saved in a JSON file. We have to copy it in our client code and save 
 We learnt in the [PDAs](#PDAs) section above about PDAs. Let's see how we derive it in the client. Open up any file from the [/app/src/util/program](/app/src/util/program) directory.
 For example, to derive an expense's account PDA, we're using
 ```ts
+// Line 17, createExpense.ts
+
 let [expense_account, bump] = anchor.web3.PublicKey.findProgramAddressSync(
     [
         Buffer.from("expense"), 
@@ -87,15 +91,17 @@ This function returns out PDA and bump that kicked the public key off the ED2559
 Let's open [/app/src/util/program/createExpense.ts](/app/src/util/program/createExpense.ts) to understand how we're calling the `initializeExpense` instruction to add a new expense entry through client.
 The function is deriving a PDA first, which we've covered, let's look at the important part, which is:
 ```ts
-    const sig = await program.methods.initializeExpense(
-      newId,
-      merchantName,
-      new anchor.BN(itemAmount)
-    ).accounts({
-      expenseAccount: expense_account,
-      authority: wallet.publicKey,
-    })
-      .rpc();
+// Line 23
+
+const sig = await program.methods.initializeExpense(
+    newId,
+    merchantName,
+    new anchor.BN(itemAmount)
+).accounts({
+    expenseAccount: expense_account,
+    authority: wallet.publicKey,
+})
+    .rpc()
 ```
 Here, we are using our program provider to access the `initializeExpense` method. We are able to access it because of the IDL type that we added. The method takes in the parameters that we defined in our program, which are the unique ID, merchant name, and the amount we spent.
 
@@ -106,11 +112,15 @@ Similarly, we are calling all other instructions in the client for updating and 
 #### 1.5 Fetching on-chain data
 We've understand how to call instructions in our Solana program through client. But, how do we fetch the on-chain data?
 
-Let's open up [app/util/program/getExpenses.ts](app/util/program/getExpenses.ts).
+Let's open up [app/util/program/getExpenses.ts](/app/src/util/program/getExpenses.ts).
+
 We're fetching all expense accounts in this part:
 ```ts
+// Line 12
+
 const expenses = await program.account.expenseAccount.all()
 ```
+
 We're getting out expenseAccount and using the `all()` method to get all expense accounts. We can also fetch indiviual accounts by using the `fetch()` method and passing our PDA instead.
 
 #### 2.1 Creating expense data table
@@ -118,17 +128,19 @@ Now, let's see where and how we are rendering out data.
 Open up [/app/src/components/MyExpenses.tsx](/app/src/components/MyExpenses.tsx)
 Notice this part:
 ```ts
-  useEffect(() => {
+// Line 47
+
+useEffect(() => {
     if (!wallet) {
-      setExpenses([])
-      return
+        setExpenses([])
+        return
     }
     const run = async () => {
-      const data = await getExpenses(wallet as NodeWallet)
-      setExpenses(data)
+        const data = await getExpenses(wallet as NodeWallet)
+        setExpenses(data)
     }
     run()
-  }, [wallet])
+}, [wallet])
 ```
 Here, we're calling the `getExpenses` function which we have defined in [/app/src/utils/program/getExpenses.ts](/app/src/utils/program/getExpenses.ts).
 When we get the data, we're storing it in our expenses state, which is being rendered at the bottom as a table from Chakra UI components
