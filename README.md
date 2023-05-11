@@ -13,25 +13,25 @@
 
 ## 📗 Learn
 
-In this workshop, we'll understand PDAs and their uses in Solana by creating a simple expense tracking app.
+In this workshop, we'll learn about PDAs and their use in Solana by creating a simple expense tracking app. 
 
-The app has a simple UI to connect wallet and view your expenses in tabular form and a distribution chart. You can add new expenses, update existing ones, or delete them.
+The app has a simple UI to connect to a wallet and view expenses in tabular form and a distribution chart. You can add new expenses, update existing ones, or delete them.
 
-Each expense is a PDA (Program Derived Address), owned by the user who creates them. Head over to [Diagrams](#diagrams) to understand it in depth.
+Each expense is a PDA (Program Derived Address) owned by the user who creates it. Refer to the [Diagrams](#diagrams) section to gain a deeper understanding of it.
 
 ### PDAs
 A Program Derived Address (PDA) is an account whose public key is created using an algorithm based on the program's address. Unlike regular accounts, PDAs don't have private keys and can perform actions without needing signatures from clients or user wallets.
 
-To create a PDA, we need to provide "seeds" which are external data as bytes. Seeds can be any data like wallet address, string, or unique ID. PDAs are deterministic, which means we can create and derive them again and again using the same seeds. We can perform actions for our PDA accounts using the derived public key.
+To create a PDA, we need to provide "seeds" which are external data as bytes. Seeds can be any data like a wallet address, string, or unique ID. PDAs are deterministic, which means we can create and derive them again and again using the same seeds. We can perform actions for our PDA accounts using the derived public key.
 
 Seeds often include a unique ID which is helpful when dealing with our expense entry data. By using the unique ID of an expense entry, we can easily derive its PDA and get the on-chain account by passing the ID in seeds.
 
-In our case, we are using PDAs as separate accounts that are owned by the user. The user has authority over controlling these PDA accounts, which represent individual expense entry data.
+In our case, we are using PDAs as separate accounts that are owned by the user. The user has control over these PDA accounts, which represent individual expense entry data.
 
-> Note: PDAs are **derived** using an algorithm, we can get them using PublicKey.findProgramAddressSync from `@solana/web3.js`. PDAs are NOT fetched from on-chain data, only accounts are **fetched**.
+> Note: PDAs are **derived** using an algorithm. We can get them using PublicKey.findProgramAddressSync from `@solana/web3.js`. PDAs are NOT fetched from on-chain data, only accounts are **fetched**.
 
 ### Client Code
-Let's go through the code and understand how our client is working.
+Let's go through the code and understand how our client works.
 1. Program Interaction
 - 1.1 Creating Anchor Provider
 - 1.2 Adding IDL
@@ -45,11 +45,9 @@ Let's go through the code and understand how our client is working.
 
 
 #### 1.1 Creating Anchor Provider
-Let's get started with creating a Anchor provider, which will interact with our Solana program.
-Head over to: [/app/src/util/anchorProgram.ts](/app/src/util/anchorProgram.ts)
+To get started, we create an Anchor provider, which will interact with our Solana program. Go to [/app/src/util/anchorProgram.ts](/app/src/util/anchorProgram.ts)
 
-
-We're first creating the anchor program provider that will help us interact with our program. Note that it takes in our `IDL`, let's understand that next.
+We first create an anchor program provider that will help us interact with our program. Note that it takes in our `IDL`. We will understand more about the IDL next. 
 ```ts
 export const anchorProgram = (wallet: anchor.Wallet, network?: string) => {
   const provider = getProvider(wallet, network);
@@ -99,14 +97,15 @@ The function is deriving a PDA first, which we've covered, let's look at the imp
     })
       .rpc();
 ```
-Here. we're using our program provider and accessing the `initializeExpense` method. We're able to get it because of the IDL type we added.
-The method takes in the parameters we defined in our program. Which is the unique ID, merchant name and the amount we spent.
-Next, we need to enter all the accounts that are required for this method. We're first passing our PDA for `expenseAccount`, which will become our on-chain account holding the expense data. This is followed by the `authority`, which is simply who has the ownership of the account. Naturally, the user should have the ownership of their expense accounts, so we're setting it to our wallet's public key.
+Here, we are using our program provider to access the `initializeExpense` method. We are able to access it because of the IDL type that we added. The method takes in the parameters that we defined in our program, which are the unique ID, merchant name, and the amount we spent.
 
-Similarly, we're calling all other instructions in client for updating and deleting expense.
+Next, we need to enter all the accounts that are required for this method. First, we are passing our PDA for `expenseAccount`, which will become our on-chain account holding the expense data. This is followed by the `authority`, which is simply who has ownership of the account. Naturally, the user should have ownership of their expense accounts, so we are setting it to our wallet's public key.
+
+Similarly, we are calling all other instructions in the client for updating and deleting expenses.
 
 #### 1.5 Fetching on-chain data
 We've understand how to call instructions in our Solana program through client. But, how do we fetch the on-chain data?
+
 Let's open up [app/util/program/getExpenses.ts](app/util/program/getExpenses.ts).
 We're fetching all expense accounts in this part:
 ```ts
