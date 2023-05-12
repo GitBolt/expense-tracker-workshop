@@ -309,7 +309,7 @@ useEffect(() => {
 }, [wallet])
 ```
 
-Here, we're calling the `getExpenses` function which we have defined in [/app/src/utils/program/getExpenses.ts](/app/src/utils/program/getExpenses.ts).
+Here, we're calling the `getExpenses` function which we have defined in [/app/src/util/program/getExpenses.ts](/app/src/util/program/getExpenses.ts).
 When we get the data, we're storing it in our expenses state, which is being rendered at the bottom as a table from Chakra UI components
 
 #### 2.2 Creating Chart

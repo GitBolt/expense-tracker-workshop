@@ -1,6 +1,7 @@
 import { DEVNET_RPC } from "@/util/constants"
 import { createExpense } from "@/util/program/createExpense"
 import { getExpenses } from "@/util/program/getExpenses"
+import { InfoIcon } from "@chakra-ui/icons"
 import {
   Button,
   FormControl,
@@ -16,7 +17,11 @@ import {
   ModalContent,
   ModalHeader, ModalOverlay,
   NumberInput,
-  useToast
+  useToast,
+  Text,
+  Flex,
+  Tooltip,
+  AlertIcon
 } from "@chakra-ui/react"
 import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet"
 import { useAnchorWallet } from "@solana/wallet-adapter-react"
@@ -73,7 +78,16 @@ export const AddItem = ({ isOpen, onClose, setExpenses }: { isOpen: boolean, onC
         <ModalCloseButton />
         <ModalBody>
           <FormControl mb={4}>
-            <FormLabel>Merchant</FormLabel>
+            <Flex w="100%" justify="space-between">
+              <FormLabel>Merchant</FormLabel>
+
+              <Flex align="center" justify="center" gap="0.5rem">
+                <Tooltip label='Merchant names in our program are limited to 12 characters. We can increase it but that will require more fee to store!' fontSize='md'>
+                  <InfoIcon color="gray.500"/>
+                </Tooltip>
+                <Text color="gray.500" fontWeight={600}>Limit: {merchant ? merchant.length : 0}/12</Text>
+              </Flex>
+            </Flex>
             <Input
               maxLength={12}
               onChange={(e) => setMerchant(e.target.value)}
