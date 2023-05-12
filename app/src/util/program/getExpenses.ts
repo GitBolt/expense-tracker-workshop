@@ -9,7 +9,18 @@ export const getExpenses = async (
 
 
   // @ts-ignore
-  const expenses = await program.account.expenseAccount.all()
+
+  const expenses = await program.account.expenseAccount.all([
+    {
+      memcmp: {
+        offset:
+          8 +
+          8,
+        bytes: wallet.publicKey.toBase58()
+      }
+    }
+  ])
+  console.log(expenses)
   const output = expenses.map((expense: any) => {
     return {
       merchant: expense.account.mname,

@@ -82,6 +82,7 @@ export const UpdateItem = ({ isOpen, onClose, setExpenses, currentValues }: { is
           <FormControl mb={4}>
             <FormLabel>Merchant</FormLabel>
             <Input
+              maxLength={12}
               defaultValue={currentValues.merchant}
               onChange={(e) => setMerchant(e.target.value)}
             />

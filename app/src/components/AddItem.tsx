@@ -75,6 +75,7 @@ export const AddItem = ({ isOpen, onClose, setExpenses }: { isOpen: boolean, onC
           <FormControl mb={4}>
             <FormLabel>Merchant</FormLabel>
             <Input
+              maxLength={12}
               onChange={(e) => setMerchant(e.target.value)}
             />
           </FormControl>
