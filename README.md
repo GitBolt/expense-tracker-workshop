@@ -60,9 +60,8 @@ We will define what values an expense account will store. The space allocated is
 #[derive(Default)]
 pub struct ExpenseAccount {
     pub id: u64,
-    pub mname: String,
+    pub merchant_name: String,
     pub amount: u64,
-    pub bump: u8,
 }
 ```
 
@@ -75,33 +74,21 @@ Notice this part:
 // Line 50
 
 #[derive(Accounts)]
-#[instruction(_id : String)]
+#[instruction(id : String)]
 pub struct InitializeExpense<'info> {
-
-    #[account(
-        mut,
-    )]
+    #[account(mut)]
     pub authority: Signer<'info>,
-
 
     #[account(
         init,
         payer = authority,
-        space = 8 
-            + 8 // id
-            + (4 + 12) // merchant name
-            + 8 // amount
-            + 1, // bump
-        seeds = [b"expense".as_ref(),authority.key().as_ref(),_id.as_ref()], 
+        space = 8 + 8 + 32+ (4 + 12)+ 8 + 1,
+        seeds = [b"expense", authority.key().as_ref(), id.as_ref()], 
         bump
     )]
     pub expense_account: Account<'info, ExpenseAccount>,
 
-    // Misc Accounts
-    #[account(address = system_program::ID)]
-    pub system_program: Program<'info,System>,
-    #[account(address = solana_program::sysvar::rent::ID)]
-    pub rent: Sysvar<'info, Rent>,
+    pub system_program: Program<'info, System>,
 }
 ```
 
@@ -117,27 +104,19 @@ Notice this part:
 // Line 80
 
 #[derive(Accounts)]
-#[instruction(_id : String)]
+#[instruction(id : String)]
 pub struct ModifyExpense<'info> {
-
-    #[account(
-        mut,
-    )]
+    #[account(mut)]
     pub authority: Signer<'info>,
 
-
     #[account(
         mut,
-        seeds = [b"expense".as_ref(),authority.key().as_ref(),_id.as_ref()], 
-        bump=expense_account.bump
+        seeds = [b"expense", authority.key().as_ref(), id.as_ref()], 
+        bump
     )]
     pub expense_account: Account<'info, ExpenseAccount>,
 
-    // Misc Accounts
-    #[account(address = system_program::ID)]
-    pub system_program: Program<'info,System>,
-    #[account(address = solana_program::sysvar::rent::ID)]
-    pub rent: Sysvar<'info, Rent>,
+    pub system_program: Program<'info, System>,
 }
 ```
 
@@ -153,28 +132,20 @@ Notice this part:
 // Line 104
 
 #[derive(Accounts)]
-#[instruction(_id : String)]
+#[instruction(id : String)]
 pub struct DeleteExpense<'info> {
-
-    #[account(
-        mut,
-    )]
+    #[account(mut)]
     pub authority: Signer<'info>,
-
 
     #[account(
         mut,
         close = authority,
-        seeds = [b"expense".as_ref(),authority.key().as_ref(),_id.as_ref()], 
-        bump=expense_account.bump
+        seeds = [b"expense", authority.key().as_ref(), id.as_ref()], 
+        bump
     )]
     pub expense_account: Account<'info, ExpenseAccount>,
 
-    // Misc Accounts
-    #[account(address = system_program::ID)]
-    pub system_program: Program<'info,System>,
-    #[account(address = solana_program::sysvar::rent::ID)]
-    pub rent: Sysvar<'info, Rent>,
+    pub system_program: Program<'info, System>,
 }
 ```
 
