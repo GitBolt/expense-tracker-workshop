@@ -195,6 +195,9 @@ export const anchorProgram = (wallet: anchor.Wallet, network?: string) => {
 When you build your program, in the `target/` directory, your program's IDL is created. IDL is essentially the strucuture of your entire program, including all instructions, instruction params and all accounts.
 The IDL is saved in a JSON file. We have to copy it in our client code and save it as a type so that we can easily work with our anchor provider with type annotations and checking. In this repository, the IDL is present in [/app/src/util/idl.ts](/app/src/util/idl.ts) file
 
+We have to first copy the generated IDL JSON from our program's target directory, and paste it as `IDLType` in our client. This will be the `type` for our IDL Data.
+Then, define the `IDLData` variable with the exact same IDL JSON, and add the `IDLType` to our `IDLData` object's type. That's it!.
+
 #### 1.3 Deriving PDAs in client
 
 We learnt in the [PDAs](#pdas) section above about PDAs. Let's see how we derive it in the client. Open up any file from the [/app/src/util/program](/app/src/util/program) directory.
