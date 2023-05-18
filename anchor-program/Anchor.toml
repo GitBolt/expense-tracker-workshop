@@ -1,8 +1,8 @@
 [features]
 seeds = false
 skip-lint = false
-[programs.localnet]
-etracker = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+[programs.devnet]
+etracker = "5TMCNvnK8FdXVLPdzH9SzRdULRNfHqAiqx5PmTCWpGkg"
 
 [registry]
 url = "https://api.apr.dev"
