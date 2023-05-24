@@ -11,18 +11,18 @@ describe("Expense Tracker", async () => {
 
   const wallet = provider.wallet as anchor.Wallet;
 
-  let merchant_name = "test";
+  let merchantName = "test";
   let amount = 100;
   let id = 1;
 
-  let merchant_name2 = "test 2";
+  let merchantName2 = "test 2";
   let amount2 = 200;
 
   let [expense_account] = anchor.web3.PublicKey.findProgramAddressSync(
     [
       Buffer.from("expense"),
       wallet.publicKey.toBuffer(),
-      new BN(id).toArrayLike(Buffer, "be", 8),
+      new BN(id).toArrayLike(Buffer, "le", 8),
     ],
     program.programId
   );
@@ -31,7 +31,7 @@ describe("Expense Tracker", async () => {
     await program.methods
       .initializeExpense(
         new anchor.BN(id),
-        merchant_name,
+        merchantName,
         new anchor.BN(amount)
       )
       .accounts({
@@ -42,10 +42,8 @@ describe("Expense Tracker", async () => {
   });
 
   it("Modify Expense", async () => {
-    // Add your test here.
-
     await program.methods
-      .modifyExpense(new anchor.BN(id), merchant_name2, new anchor.BN(amount2))
+      .modifyExpense(new anchor.BN(id), merchantName2, new anchor.BN(amount2))
       .accounts({
         expenseAccount: expense_account,
         authority: wallet.publicKey,
